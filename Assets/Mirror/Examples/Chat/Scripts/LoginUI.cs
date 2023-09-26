@@ -8,9 +8,9 @@ public class LoginUI : MonoBehaviour
     [SerializeField] internal Button hostButton;
     [SerializeField] internal Button clientButton;
     [SerializeField] internal Text errorText;
+    //[SerializeField] internal GameObject MainGameLobby;
 
-    public static LoginUI instance;
-
+    public static LoginUI instance; 
     void Awake()
     {
         instance = this;

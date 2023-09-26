@@ -2,6 +2,7 @@ using Mirror;
 using Mirror.Examples.Chat;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -9,7 +10,7 @@ using UnityEngine;
 public class WWNetworkManager : NetworkManager
 {
     public static new WWNetworkManager singleton { get; private set; }
-
+    public WWPlayer player;
     /// <summary>
     /// Runs on both Server and Client
     /// Networking is NOT initialized when this fires
@@ -19,13 +20,8 @@ public class WWNetworkManager : NetworkManager
         base.Awake();
         singleton = this;
     }
-
-    // Called by UI element NetworkAddressInput.OnValueChanged
-    public void SetHostname(string hostname)
-    {
-        networkAddress = hostname;
-    }
-
+    
+ 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
         /*// remove player name from the HashSet
