@@ -1,4 +1,3 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +9,7 @@ public class LoginGUI : MonoBehaviour
     [SerializeField] internal InputField userIDinput;
     [SerializeField] internal Button hostButton;
     [SerializeField] internal Button clientButton;
-    [SerializeField] internal Text errorText;
-    //[SerializeField] internal GameObject MainGameLobby;
-    
-    public static LoginUI instance;
+    [SerializeField] internal Text errorText; 
     public GameLogic gameLogic;
     public MainGameUI mainGame;
     // Called by UI element UsernameInput.OnValueChanged
@@ -23,8 +19,7 @@ public class LoginGUI : MonoBehaviour
         clientButton.interactable = !string.IsNullOrWhiteSpace(username);
     }
     //Called by UI element host and client buttion
-    public void AssignPlayerID() {
-        Debug.Log("Function called");
+    public void AssignPlayerID() { 
         mainGame.localplayerID = getPlayerID();
         gameLogic.playerID = getPlayerID();
     }

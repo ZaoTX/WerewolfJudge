@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using GameUtilities;
-using System.Linq;
-using Mirror;
-using Unity.VisualScripting;
+using UnityEngine; 
+using System.Linq;  
 
 public enum PlayerRole
 {
@@ -14,7 +11,7 @@ public enum PlayerRole
     Witch,
     Hunter
 }
-public class GameLogic : NetworkBehaviour
+public class GameLogic : MonoBehaviour
 {
     public List<PlayerRole> roles
             = new List<PlayerRole> {
@@ -30,41 +27,71 @@ public class GameLogic : NetworkBehaviour
         WitchTurn,
         SeerTurn,
         HunterTurn,
-        Campaign,//¾ºÑ¡¾¯³¤
-        Discussion,
+        Campaign,//¾ºÑ¡¾¯³¤ 
         Vote
     }
     public AudioSource THQBY;//ÌìºÚÇë±ÕÑÛ...ÀÇÈË»÷É±Ä¿±ê
+    public AudioSource witchAudio;//Å®Î×ÇëÕöÑÛ...¾Èor¶¾
+    public AudioSource closeEyesAudio;//Å®Î×ÇëÕöÑÛ...¾Èor¶¾
     public PlayerTurn cur_Turn;
     public int playerID;
     public PlayerRole playerRole;
+    public List<int> playerWhoDied = new List<int>();// Player who died tonight
+    public List<int> playerWhoIsAlive = new List<int>{1,2,3,4,5,6,7,8,9};
+    public MainGameUI gameUI;
     /// <summary>
     /// When the gameobject enables We start the game
     /// </summary>
     public void OnEnable()
     { 
         cur_Turn = PlayerTurn.WerewolfTurn;
-        StartCoroutine(FinalStateMachine());
-        
+        //StartCoroutine(FinalStateMachine());
     }
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        playerRole = roles[playerID-1];
-    }
-    public override void OnStartServer(){
-        //roles = ShuffleRoles(); not shuffle for testing
-        RPCshufflecards(roles);//let client get the same card distribution
 
-    }
-    //called by Gamestart button in Lobbypanel 
-    public void PlayTHQBY() {
-        if (isServer)
-        {
-            THQBY.PlayOneShot(THQBY.clip);
+    public void UpdateAlivePlayer() {
+        foreach (int i in playerWhoDied) { 
+            playerWhoDied.Remove(i);
         }
-    }
-    [ClientRpc]
+    } 
+    //called by Gamestart button in Lobbypanel 
+    void PlayTHQBY() {
+        THQBY.PlayOneShot(THQBY.clip);
+    } 
+    void PlayWitchAudio()
+    {
+        witchAudio.PlayOneShot(witchAudio.clip);
+    } 
+    public void PlayCloseEyesAudio()
+    {
+        closeEyesAudio.PlayOneShot(closeEyesAudio.clip);
+    } 
+    void PlaySeer() { 
+        
+    } 
+    public void SetTurn(PlayerTurn playerTurn) {
+         cur_Turn=playerTurn;
+        if (playerTurn == PlayerTurn.WitchTurn)
+        {
+            PlayWitchAudio();
+            
+        }
+        else if (playerTurn == PlayerTurn.SeerTurn)
+        {
+
+        }
+        else if (playerTurn == PlayerTurn.HunterTurn)
+        {
+        }
+        else if (playerTurn == PlayerTurn.Campaign)
+        {
+        }
+        else if (playerTurn == PlayerTurn.Vote)
+        {
+        }
+        else if (playerTurn == PlayerTurn.WerewolfTurn) {
+            PlayTHQBY();
+        }
+    } 
     public void RPCshufflecards(List<PlayerRole> shuffledroles) {
         roles = shuffledroles;
     }
@@ -74,8 +101,8 @@ public class GameLogic : NetworkBehaviour
         System.Random random = new System.Random();
         List<PlayerRole> shuffledroles = roles.OrderBy(item => random.Next()).ToList();
         return shuffledroles;
-    } 
-    IEnumerator FinalStateMachine()
+    }  
+   /* IEnumerator FinalStateMachine()
     {
         while (true)
         {
@@ -96,10 +123,9 @@ public class GameLogic : NetworkBehaviour
                     break;
                 case PlayerTurn.Vote: 
                     break;
-
             }
             yield return null;
         }
-    }
+    }*/
 
 }
